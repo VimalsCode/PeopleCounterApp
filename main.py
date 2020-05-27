@@ -40,6 +40,9 @@ MQTT_HOST = IPADDRESS
 MQTT_PORT = 3001
 MQTT_KEEPALIVE_INTERVAL = 60
 
+# TOPICS information
+PERSON_TOPIC = "person"
+DURATION_TOPIC = "person/duration"
 
 def build_argparser():
     """
@@ -69,7 +72,12 @@ def build_argparser():
 
 
 def connect_mqtt():
-    ### TODO: Connect to the MQTT client ###
+    """
+    Connect to the MQTT client.
+    
+    :return: connected client reference
+    """
+    # Connect to the MQTT client
     client = mqtt.Client()
     client.connect(MQTT_HOST, MQTT_PORT, MQTT_KEEPALIVE_INTERVAL)
 
@@ -84,26 +92,29 @@ def infer_on_stream(args, client):
     :param client: MQTT client
     :return: None
     """
-    # variable
-    last_count = 0
-    total_count = 0
-    start_time = 0
-    image_mode = False
     
+    # global variable definitions
     # Set Probability threshold for detections
     global width, height, prob_threshold
     prob_threshold = args.prob_threshold
     
+    # variable
+    lastCount = 0
+    totalCount = 0
+    startTime = 0
+    missedCount = 0
+    image_mode = False
+    
     # Initialise the class
     infer_network = Network()
 
-    ### TODO: Load the model through `infer_network` ###
+    # Load the model
     model = args.model
     infer_network.load_model(model, args.device, args.cpu_extension) 
 
-    ### TODO: Handle the input stream ###
+    # get the network input shape
     net_input_shape = infer_network.get_input_shape()
-    #print(net_input_shape)
+    # specific to faster_rcnn_inception_v2_coco model
     in_shape = net_input_shape['image_tensor']
     
     # check if the input is a web cam
@@ -115,9 +126,9 @@ def infer_on_stream(args, client):
     else:
         # get the input value
         input_stream = args.input
-        assert os.path.isfile(args.input), "Specified input file doesn't exist"
-    
+        assert os.path.isfile(args.input), "Specified input file doesn't exist"    
        
+    # initiate video capture 
     cap = cv2.VideoCapture(input_stream)
     cap.open(input_stream)
     
@@ -137,26 +148,53 @@ def infer_on_stream(args, client):
         image = cv2.resize(frame, (in_shape[3], in_shape[2]))
         # Change format from HWC to CHW
         image_to_infer = image.transpose((2, 0, 1))
+         # prepare according to faster_rcnn_inception_v2_coco model
         image_to_infer = image_to_infer.reshape(1, *image_to_infer.shape)
-        
-        request_id=0
         # Start asynchronous inference for specified request
         net_input = {'image_tensor': image_to_infer ,'image_info': image_to_infer.shape[1:]}
-        #print(net_input)
+        
+        # request id to be used
+        request_id=0
+        
         inf_start = time.time()
         duration_report = None
+        # perform inference
         infer_network.exec_net(request_id, net_input)
         # Wait for the result 
         if infer_network.wait(request_id) == 0:
             # Results of the output layer of the network
             det_time = time.time() - inf_start
-            result = infer_network.get_output()
+            network_result = infer_network.get_output()
             inf_time_message = "Inference time: {:.3f}ms"\
                                .format(det_time * 1000)
-            #print(inf_time_message)
             
-            #frame, current_count = generate_out(frame, result)
-            frame, current_count = generate_rcnn_out(frame, result)                    
+            frame, currentCount = generate_rcnn_out(frame, network_result)
+            
+            if currentCount > lastCount:
+                startTime = time.time()
+                totalCount = totalCount + currentCount - lastCount
+                publish_topic(client, PERSON_TOPIC, {"total": totalCount})
+                
+            # assume the person is already detected, don't break immediately
+            if currentCount == 0 and lastCount != 0:
+                # missing case
+                missedCount = missedCount + 1
+                # wait till the certain count
+                if missedCount >= 5:
+                    duration = int(time.time() - startTime)
+                    # Publish messages to the MQTT server
+                    publish_topic(client, DURATION_TOPIC, {"duration": duration})
+                    missedCount = 0
+                    lastCount = currentCount
+            else:
+                publish_topic(client, PERSON_TOPIC, {"count": currentCount})
+                lastCount = currentCount
+            
+            #if currentCount < lastCount:
+             #   duration = int(time.time() - startTime)
+                # Publish messages to the MQTT server
+              #  publish_topic(client, "person/duration", {"duration": duration})            
+            
            
             if key_pressed == 27:
                 break
@@ -164,7 +202,6 @@ def infer_on_stream(args, client):
         # Send frame to the ffmpeg server
         #  Resize the frame
         frame = cv2.resize(frame, (768, 432))
-        #print(frame.shape)
         sys.stdout.buffer.write(frame)  
         sys.stdout.flush()
     
@@ -194,9 +231,12 @@ def infer_on_stream(args, client):
 
         ### TODO: Write an output image if `single_image_mode` ###
 
-def publish_topic(topic_name, value):
+def publish_topic(client, topic_name, value):
     """
-    To publish the topic to MQTT server
+    To publish the topic to MQTT server.
+    
+    :param topic_name: Topic name to be used
+    :param client: value to be published
     :return: None
     """
     client.publish(topic_name, payload=json.dumps(value), qos=0, retain=False)
@@ -204,6 +244,7 @@ def publish_topic(topic_name, value):
 def generate_ssd_out(frame, result):
     """
     Parse inference output.
+    
     :param frame: input frame from camera/video
     :param result: list contains the data to parse output
     :return: frame
@@ -220,7 +261,13 @@ def generate_ssd_out(frame, result):
     return frame, current_count
 
 def generate_rcnn_out(frame, result):
-    current_count = 0
+    """
+    Parse inference output according to faster_rcnn_inception_v2_coco model.
+    
+    :param frame: input frame from camera/video used for inference
+    :param result: list contains the data to parse output
+    """
+    currentCount = 0
     probs = result[0, 0, :, 2]
     for i, p in enumerate(probs):
         if p > prob_threshold:            
@@ -228,8 +275,8 @@ def generate_rcnn_out(frame, result):
             loc1 = (int(box[0] * width), int(box[1] * height))
             loc2 = (int(box[2] * width), int(box[3] * height))
             frame = cv2.rectangle(frame, loc1, loc2, (0, 55, 255), 1)
-            current_count += 1
-    return frame, current_count
+            currentCount = currentCount + 1
+    return frame, currentCount
         
 def main():
     """
