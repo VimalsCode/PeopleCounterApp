@@ -13,7 +13,9 @@ The people counter application is developed based on public object detection mod
 ssd_mobilenet_v2_coco model had some issues with model accuracy as it was not able to detect all the people from the input video stream. This experiment was followed by using the faster_rcnn_inception_v2_coco model which resulted in better accuracy and was able identify all the people from the input video stream.
 
 The faster_rcnn_inception_v2_coco can be downloaded using the following command,
+```
 wget  http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz
+```
 
 The downloaded model in tar.gz format is extracted using the following command,
 tar -xvf faster_rcnn_inception_v2_coco_2018_01_28
