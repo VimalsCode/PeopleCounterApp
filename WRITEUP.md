@@ -18,7 +18,9 @@ wget  http://download.tensorflow.org/models/object_detection/faster_rcnn_incepti
 ```
 
 The downloaded model in tar.gz format is extracted using the following command,
+```
 tar -xvf faster_rcnn_inception_v2_coco_2018_01_28
+```
 
 This resulted in extraction of the necessary model files,
 - frozen_inference_graph.pb : frozen graph proto with weights
@@ -27,9 +29,9 @@ This resulted in extraction of the necessary model files,
 ## Custom Layers
 The model was converted into Intermediate Representation format using the following command,
 
-'''
+```
 python /opt/intel/openvino/deployment_tools/model_optimizer/mo.py --input_model faster_rcnn_inception_v2_coco_2018_01_28/frozen_inference_graph.pb --output_dir faster_rcnn_inception_optimized --tensorflow_object_detection_api_pipeline_config faster_rcnn_inception_v2_coco_2018_01_28/pipeline.config --reverse_input_channels --tensorflow_use_custom_operations_config /opt/intel/openvino/deployment_tools/model_optimizer/extensions/front/tf/faster_rcnn_support.json
-'''
+```
 This generates the pair of files describing the model(.xml & .bin) which can be read, loaded, and inferred with the Inference Engine.
 
 The Intermediate Engine core object is created along with the Intermediate Engine network object is created based on Intermediate representation artifacts.Once created, based on the mentioned device type the network Intermediate representation is queried for unsupported layers a mechanism to understand what network layers are supported in the current configuration.Additional device extension is added to address unsupported layers.
