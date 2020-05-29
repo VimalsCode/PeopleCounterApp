@@ -48,14 +48,14 @@ ssd_mobilenet_v2_coco | converted | 100 KB
 faster_rcnn_inception_v2_coco | original | 55MB
 faster_rcnn_inception_v2_coco | converted | 123KB
 
-During the inference test with ssd_mobilenet_v2_coco and faster_rcnn_inception_v2_coco the main problem arised with the detection of the second person in the video. The corresponding frame is between 227-449 based on the experiment conducted as mentioned in original_detection_model_inference.ipynb.
+During the inference test with ssd_mobilenet_v2_coco and faster_rcnn_inception_v2_coco the main problem arised with the detection of the second person in the video. The corresponding frame is between 227-449 based on the experiment conducted as mentioned in original_detection_model_inference.ipynb. The accuracy calculation was performed only taking into consideration the 2nd person. This gives us the overview about the accuracy improvement with OpenVino toolkit.
 
-Model | Type | Accuracy | Description
+Model | Type | Accuracy | Inference Time
 ------------ | ------------- | ------------- | -------------
 ssd_mobilenet_v2_coco | original | True positive = 35 / 222 = 0.1576 <br> False negative = 188 / 222 = 0.8468 |
-ssd_mobilenet_v2_coco | converted | 100 KB |
-faster_rcnn_inception_v2_coco | original | 55MB |
-faster_rcnn_inception_v2_coco | converted | 123KB | 
+ssd_mobilenet_v2_coco | converted | True positive = 198 / 222 = 0.8919 <br> False Negative = 24 / 222 = 0.1081 |
+faster_rcnn_inception_v2_coco | original | True positive = 198 / 222 = 0.8919 <br> False Negative = 24 / 222 = 0.1081 | 
+faster_rcnn_inception_v2_coco | converted | True positive = 213 / 222 = 0.9594 <br> False Negative = 9 / 222 = 0.0405 | 
 
 
 The inference time of the model pre- and post-conversion was...
