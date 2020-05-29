@@ -40,7 +40,7 @@ The Intermediate Engine core object is created along with the Intermediate Engin
 
 After handling framework-agnostic Intermediate Representation (IR) format, the Inference Engine consumes the IR to perform inference.The initial model performance deals with the batching which impacts computational aspect during inference.The model inference was performed with single input.
 
-The size of the model pre- and post-conversion is mentioned here. For pre-conversion frozen_inference_graph.pb is considered and for post-conversion frozen_inference_graph.xml is considered.
+The size of the model pre- and post-conversion is mentioned here. For pre-conversion frozen_inference_graph.pb is considered and for post-conversion frozen_inference_graph.xml is considered. It is visible to note that the usage of OpenVino IR yields compressed size.
 Model | Type | size
 ------------ | ------------- | -------------
 ssd_mobilenet_v2_coco | original | 67 MB
@@ -48,8 +48,14 @@ ssd_mobilenet_v2_coco | converted | 100 KB
 faster_rcnn_inception_v2_coco | original | 55MB
 faster_rcnn_inception_v2_coco | converted | 123KB
 
-The difference between model accuracy pre- and post-conversion was...
+During the inference test with ssd_mobilenet_v2_coco and faster_rcnn_inception_v2_coco the main problem arised with the detection of the second person in the video. The corresponding frame is between 227-449 based on the experiment conducted as mentioned in original_detection_model_inference.ipynb.
 
+Model | Type | Accuracy | Description
+------------ | ------------- | ------------- | -------------
+ssd_mobilenet_v2_coco | original | True positive = 35 / 222 = 0.1576 <br> False negative = 188 / 222 = 0.8468 |
+ssd_mobilenet_v2_coco | converted | 100 KB |
+faster_rcnn_inception_v2_coco | original | 55MB |
+faster_rcnn_inception_v2_coco | converted | 123KB | 
 
 
 The inference time of the model pre- and post-conversion was...
