@@ -72,6 +72,6 @@ The people counter app can play an important role in smart city based applicatio
 The model accuracy is largely determined by the image feature set used during the training phase.How varied the training images in terms different condition, image anglewas used for training impacts the inference results.Also, the model architecture plays a important role in learning the specifics during the training.
 
 ## References
-https://www.analyticsvidhya.com/blog/2020/04/build-your-own-object-detection-model-using-tensorflow-api/
-https://gist.github.com/imamdigmi/b203d120953db4ef2a89ca7ce70da0a1
-https://medium.com/@iKhushPatel/convert-video-to-images-images-to-video-using-opencv-python-db27a128a481
+- https://www.analyticsvidhya.com/blog/2020/04/build-your-own-object-detection-model-using-tensorflow-api/
+- https://gist.github.com/imamdigmi/b203d120953db4ef2a89ca7ce70da0a1
+- https://medium.com/@iKhushPatel/convert-video-to-images-images-to-video-using-opencv-python-db27a128a481
