@@ -64,6 +64,8 @@ faster_rcnn_inception_v2_coco | converted | True positive = 213 / 222 = 0.9594 <
 
 The inference time of the model pre- and post-conversion clearly shows that faster_rcnn_inception_v2_coco requires additional inference time due to it's large number of model parameter which yields better accuracy.
 
+Edge AI provides the ability to perform inference closer to the source where data gets generated and also helps to address data privacy as the processing happens at the edge.This is an efficient alternative for small to mid sized companies to better manage bandwidth usage and faster response times for their applications.This also reduces cloud requirement and thereby brings down data storage requirement.
+
 ## Assess Model Use Cases
 
 The people counter app can help to count people movement within confined shop.In specific terms, current situation requires signal/notification when the threshold is reached or if additional people can enter the shop or should wait outside for their turn.This will certainly reduce manual inspection.
