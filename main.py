@@ -95,7 +95,7 @@ def infer_on_stream(args, client):
     
     # global variable definitions
     # Set Probability threshold for detections
-    global width, height, prob_threshold
+    global width, height, prob_threshold, frameCount
     prob_threshold = args.prob_threshold
     
     # variable
@@ -104,6 +104,8 @@ def infer_on_stream(args, client):
     startTime = 0
     missedCount = 0
     image_mode = False
+    # dict to hold inference time
+    inference_time_dict = {}
     
     # Initialise the class
     infer_network = Network()
@@ -119,8 +121,9 @@ def infer_on_stream(args, client):
     
     # check if the input is a web cam
     if args.input == 'CAM':
-        args.input = 0
+        input_stream = 0
     elif args.input.endswith('.jpg') or args.input.endswith('.bmp') :
+        input_stream = args.input
         image_mode = True
     # Checks for video file
     else:
@@ -135,13 +138,15 @@ def infer_on_stream(args, client):
     # Grab the shape of the input 
     width = int(cap.get(3))
     height = int(cap.get(4))
-    
+    frameCount = 0
     # Loop until stream is over
+    #total_inf_start = time.time()
     while cap.isOpened():
         # Read the next frame
         flag, frame = cap.read()
         if not flag:
             break
+        frameCount = frameCount + 1
         key_pressed = cv2.waitKey(60)
 
         # Pre-process the frame
@@ -151,7 +156,7 @@ def infer_on_stream(args, client):
          # prepare according to faster_rcnn_inception_v2_coco model
         image_to_infer = image_to_infer.reshape(1, *image_to_infer.shape)
         # Start asynchronous inference for specified request
-        net_input = {'image_tensor': image_to_infer ,'image_info': image_to_infer.shape[1:]}
+        network_input = {'image_tensor': image_to_infer ,'image_info': image_to_infer.shape[1:]}
         
         # request id to be used
         request_id=0
@@ -159,16 +164,20 @@ def infer_on_stream(args, client):
         inf_start = time.time()
         duration_report = None
         # perform inference
-        infer_network.exec_net(request_id, net_input)
+        infer_network.exec_net(request_id, network_input)
         # Wait for the result 
         if infer_network.wait(request_id) == 0:
             # Results of the output layer of the network
             det_time = time.time() - inf_start
+            # get output
             network_result = infer_network.get_output()
             inf_time_message = "Inference time: {:.3f}ms"\
                                .format(det_time * 1000)
-            
+            # to gather all the inference time
+            inference_time_dict[frameCount] = det_time
+            # process output
             frame, currentCount = generate_rcnn_out(frame, network_result)
+            
             
             if currentCount > lastCount:
                 startTime = time.time()
@@ -188,14 +197,8 @@ def infer_on_stream(args, client):
                     lastCount = currentCount
             else:
                 publish_topic(client, PERSON_TOPIC, {"count": currentCount})
-                lastCount = currentCount
-            
-            #if currentCount < lastCount:
-             #   duration = int(time.time() - startTime)
-                # Publish messages to the MQTT server
-              #  publish_topic(client, "person/duration", {"duration": duration})            
-            
-           
+                lastCount = currentCount           
+              
             if key_pressed == 27:
                 break
         
@@ -204,32 +207,17 @@ def infer_on_stream(args, client):
         frame = cv2.resize(frame, (768, 432))
         sys.stdout.buffer.write(frame)  
         sys.stdout.flush()
+        
+        if image_mode:
+            cv2.imwrite('output_image.jpg', frame)
     
     cap.release()
     cv2.destroyAllWindows()
-
-    ### TODO: Loop until stream is over ###
-
-        ### TODO: Read from the video capture ###
-
-        ### TODO: Pre-process the image as needed ###
-
-        ### TODO: Start asynchronous inference for specified request ###
-
-        ### TODO: Wait for the result ###
-
-            ### TODO: Get the results of the inference request ###
-
-            ### TODO: Extract any desired stats from the results ###
-
-            ### TODO: Calculate and send relevant information on ###
-            ### current_count, total_count and duration to the MQTT server ###
-            ### Topic "person": keys of "count" and "total" ###
-            ### Topic "person/duration": key of "duration" ###
-
-        ### TODO: Send the frame to the FFMPEG server ###
-
-        ### TODO: Write an output image if `single_image_mode` ###
+    
+    # optional step to calculate performance
+    #total_inf_time_message = "Total Inference time: {:.3f}ms"\
+     #                         .format(sum(inference_time_dict.values()) * 1000)
+    #print(total_inf_time_message)  
 
 def publish_topic(client, topic_name, value):
     """
@@ -275,7 +263,7 @@ def generate_rcnn_out(frame, result):
             loc1 = (int(box[0] * width), int(box[1] * height))
             loc2 = (int(box[2] * width), int(box[3] * height))
             frame = cv2.rectangle(frame, loc1, loc2, (0, 55, 255), 1)
-            currentCount = currentCount + 1
+            currentCount = currentCount + 1                    
     return frame, currentCount
         
 def main():

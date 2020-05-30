@@ -82,7 +82,7 @@ class Network:
         
         :return: Return the shape of the input layer
         """
-        #return self.network.inputs[self.input_blob].shape
+        # return self.network.inputs[self.input_blob].shape
         input_shapes = {}
         for input in self.network.inputs:
             input_shapes[input] = (self.network.inputs[input].shape)
@@ -96,7 +96,7 @@ class Network:
         :param net_input: input to the model for inference
         :return: None        
         """        
-        #self.infer_request = self.exec_network.start_async(request_id=requestId,inputs={self.input_blob: net_input})
+        #self.infer_request = self.exec_network.start_async(request_id=request_id,inputs={self.input_blob: net_input})
         # Start an asynchronous request
         self.infer_request = self.exec_network.start_async(
                 request_id, 
@@ -110,10 +110,6 @@ class Network:
         :param requestId: inference requested ID
         :return: status of the inference request
         """
-        ### TODO: Wait for the request to be complete. ###
-        ### TODO: Return any necessary information ###
-        ### Note: You may need to update the function parameters. ###
-        #status = self.exec_network.requests[request_id].wait(-1)
         status = self.exec_network.requests[request_id].wait(-1)
         return status        
 
