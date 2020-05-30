@@ -66,10 +66,12 @@ The inference time of the model pre- and post-conversion clearly shows that fast
 
 ## Assess Model Use Cases
 
-The people counter app can play an important role in smart city based applications. For example, particular area within a city where people density is analyzed over period of time or how public transporation is utilized by the people and where additional transportation is required. It will help definitely with better city planning.
+The people counter app can help to count people movement within confined shop.In specific terms, current situation requires signal/notification when the threshold is reached or if additional people can enter the shop or should wait outside for their turn.This will certainly reduce manual inspection.
 
 ## Assess Effects on End User Needs
-The model accuracy is largely determined by the image feature set used during the training phase.How varied the training images in terms different condition, image anglewas used for training impacts the inference results.Also, the model architecture plays a important role in learning the specifics during the training.
+The current chosen model yields a better accuracy for the provided video.The model performance can be further analyzed by feeding in videos with different features.The videos lighting in terms of brightness, the camera focal length aspect with blurred images and also the image size providing lower resolution can provide different insight with the model accuracy.Therefore, model selection for the particular usecase is dependent on end user requirement.
+
+## Documenting Model Research
 
 ## References
 - https://www.analyticsvidhya.com/blog/2020/04/build-your-own-object-detection-model-using-tensorflow-api/
