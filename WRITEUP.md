@@ -66,6 +66,4 @@ The inference time of the model pre- and post-conversion clearly shows that fast
 The people counter app can play an important role in smart city based applications. For example, particular area within a city where people density is analyzed over period of time or how public transporation is utilized by the people and where additional transportation is required. It will help definitely with better city planning.
 
 ## Assess Effects on End User Needs
-
-Lighting, model accuracy, and camera focal length/image size have different effects on a
-deployed edge model. The potential effects of each of these are as follows...
+The model accuracy is largely determined by the image feature set used during the training phase.How varied the training images in terms different condition, image anglewas used for training impacts the inference results.Also, the model architecture plays a important role in learning the specifics during the training.
