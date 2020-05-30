@@ -1,5 +1,6 @@
 # PeopleCounterApp
 - Project writeup available in WRITEUP.md
+- Code available in the following files : main.py and inference.py
 - original_detection_model_inference.ipynb contains script used for original model analysis
 - Refer to Requirements section to run the application
 
