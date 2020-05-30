@@ -66,15 +66,6 @@ From the main directory:
    npm config set registry "http://registry.npmjs.org"
    npm install
    ```
-
-## What model to use
-
-It is up to you to decide on what model to use for the application. You need to find a model not already converted to Intermediate Representation format (i.e. not one of the Intel® Pre-Trained Models), convert it, and utilize the converted model in your application.
-
-Note that you may need to do additional processing of the output to handle incorrect detections, such as adjusting confidence threshold or accounting for 1-2 frames where the model fails to see a person already counted and would otherwise double count.
-
-**If you are otherwise unable to find a suitable model after attempting and successfully converting at least three other models**, you can document in your write-up what the models were, how you converted them, and why they failed, and then utilize any of the Intel® Pre-Trained Models that may perform better.
-
 ## Run the application
 
 From the main directory:
@@ -121,3 +112,8 @@ You must configure the environment to use the Intel® Distribution of OpenVINO�
 ```
 source /opt/intel/openvino/bin/setupvars.sh -pyver 3.5
 ```
+#### Run inference
+```
+python main.py -i resources/Pedestrian_Detect_2_1_1.mp4 -m faster_rcnn_inception_optimized/frozen_inference_graph.xml -l /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so -d CPU -pt 0.4 | ffmpeg -v warning -f rawvideo -pixel_format bgr24 -video_size 768x432 -framerate 24 -i - http://0.0.0.0:3004/fac.ffm
+```
+
