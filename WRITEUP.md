@@ -63,9 +63,7 @@ The inference time of the model pre- and post-conversion clearly shows that fast
 
 ## Assess Model Use Cases
 
-Some of the potential use cases of the people counter app are...
-
-Each of these use cases would be useful because...
+The people counter app can play an important role in smart city based applications. For example, particular area within a city where people density is analyzed over period of time or how public transporation is utilized by the people and where additional transportation is required. It will help definitely with better city planning.
 
 ## Assess Effects on End User Needs
 
