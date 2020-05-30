@@ -54,10 +54,9 @@ During the inference test with ssd_mobilenet_v2_coco and faster_rcnn_inception_v
 Model | Type | Accuracy (2nd Person detection) | Total Inference Time (ms) | Test Environment
 ------------ | ------------- | ------------- | ------------- | -------------
 ssd_mobilenet_v2_coco | original | True positive = 35 / 222 = 0.1576 <br> False negative = 188 / 222 = 0.8468 |107585.649 | local development environment Intel i7 / 16GB
-ssd_mobilenet_v2_coco | converted | True positive = 198 / 222 = 0.8919 <br> False Negative = 24 / 222 = 0.1081 |100134.695 | udacity workspace
+ssd_mobilenet_v2_coco | converted | True positive = 127 / 222 = 0.5720 <br> False Negative = 95 / 222 = 0.4279 |100134.695 | udacity workspace
 faster_rcnn_inception_v2_coco | original | True positive = 198 / 222 = 0.8919 <br> False Negative = 24 / 222 = 0.1081 |804680.068 | local development environment Intel i7 / 16GB
 faster_rcnn_inception_v2_coco | converted | True positive = 213 / 222 = 0.9594 <br> False Negative = 9 / 222 = 0.0405 | 1276130.464 | udacity workspace
-
 
 The inference time of the model pre- and post-conversion clearly shows that faster_rcnn_inception_v2_coco requires additional inference time due to it's large number of model parameter which yields better accuracy.
 
