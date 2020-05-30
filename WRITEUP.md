@@ -52,7 +52,7 @@ faster_rcnn_inception_v2_coco | converted | 123KB
 During the inference test with ssd_mobilenet_v2_coco and faster_rcnn_inception_v2_coco the main problem arised with the detection of the second person in the video. The corresponding frame is between 227-449 based on the experiment conducted as mentioned in original_detection_model_inference.ipynb. The accuracy calculation was performed only taking into consideration the 2nd person. This gives us the overview about the accuracy improvement with OpenVino toolkit.
 
 Model | Type | Accuracy (2nd Person detection) | Total Inference Time (ms) | Test Environment
------------- | ------------- | ------------- | -------------
+------------ | ------------- | ------------- | ------------- | -------------
 ssd_mobilenet_v2_coco | original | True positive = 35 / 222 = 0.1576 <br> False negative = 188 / 222 = 0.8468 |107585.649 | local development environment Intel i7 / 16GB
 ssd_mobilenet_v2_coco | converted | True positive = 198 / 222 = 0.8919 <br> False Negative = 24 / 222 = 0.1081 |100134.695 | udacity workspace
 faster_rcnn_inception_v2_coco | original | True positive = 198 / 222 = 0.8919 <br> False Negative = 24 / 222 = 0.1081 |804680.068 | local development environment Intel i7 / 16GB
