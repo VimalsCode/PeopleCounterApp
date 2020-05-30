@@ -39,6 +39,10 @@ The Intermediate Engine core object is created along with the Intermediate Engin
 
 ## Comparing Model Performance
 
+The inference was run using the following command,
+```
+python main.py -i resources/Pedestrian_Detect_2_1_1.mp4 -m faster_rcnn_inception_optimized/frozen_inference_graph.xml -l /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so -d CPU -pt 0.4 | ffmpeg -v warning -f rawvideo -pixel_format bgr24 -video_size 768x432 -framerate 24 -i - http://0.0.0.0:3004/fac.ffm
+```
 After handling framework-agnostic Intermediate Representation (IR) format, the Inference Engine consumes the IR to perform inference.The initial model performance deals with the batching which impacts computational aspect during inference.The model inference was performed with single input.
 
 The size of the model pre- and post-conversion is mentioned here. For pre-conversion frozen_inference_graph.pb is considered and for post-conversion frozen_inference_graph.xml is considered. It is visible to note that the usage of OpenVino IR yields compressed size.
@@ -49,7 +53,7 @@ ssd_mobilenet_v2_coco | converted | 100 KB
 faster_rcnn_inception_v2_coco | original | 55MB
 faster_rcnn_inception_v2_coco | converted | 123KB
 
-During the inference test with ssd_mobilenet_v2_coco and faster_rcnn_inception_v2_coco the main problem arised with the detection of the second person in the video. The corresponding frame is between 227-449 based on the experiment conducted as mentioned in original_detection_model_inference.ipynb. The accuracy calculation was performed only taking into consideration the 2nd person. This gives us the overview about the accuracy improvement with OpenVino toolkit.
+During the inference test with ssd_mobilenet_v2_coco and faster_rcnn_inception_v2_coco the main problem arised with the detection of the second person in the video. The corresponding frame is between 227-449 based on the experiment conducted as mentioned in original_detection_model_inference.ipynb. The accuracy calculation was performed only taking into consideration the 2nd person. This gives us the overview about the accuracy improvement with OpenVino toolkit.The inference with original model was performed using the original_detection_model_inference.ipynb.
 
 Model | Type | Accuracy (2nd Person detection) | Total Inference Time (ms) | Test Environment
 ------------ | ------------- | ------------- | ------------- | -------------
