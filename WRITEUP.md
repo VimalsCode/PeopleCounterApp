@@ -59,7 +59,7 @@ faster_rcnn_inception_v2_coco | original | True positive = 198 / 222 = 0.8919 <b
 faster_rcnn_inception_v2_coco | converted | True positive = 213 / 222 = 0.9594 <br> False Negative = 9 / 222 = 0.0405 | 1276130.464 | udacity workspace
 
 
-The inference time of the model pre- and post-conversion clearly shows that faster_rcnn_inception_v2_coco requires additional inference time due to it's model parameter
+The inference time of the model pre- and post-conversion clearly shows that faster_rcnn_inception_v2_coco requires additional inference time due to it's large number of model parameter which yields better accuracy.
 
 ## Assess Model Use Cases
 
