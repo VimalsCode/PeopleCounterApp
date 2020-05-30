@@ -72,6 +72,22 @@ The people counter app can help to count people movement within confined shop.In
 The current chosen model yields a better accuracy for the provided video.The model performance can be further analyzed by feeding in videos with different features.The videos lighting in terms of brightness, the camera focal length aspect with blurred images and also the image size providing lower resolution can provide different insight with the model accuracy.Therefore, model selection for the particular usecase is dependent on end user requirement.
 
 ## Documenting Model Research
+ssd_mobilenet_v2_coco_2018_03_29 - http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz
+
+The IR is generated using the following command,
+```
+python /opt/intel/openvino/deployment_tools/model_optimizer/mo.py --input_model ssd_mobilenet_v2_coco_2018_03_29/frozen_inference_graph.pb --tensorflow_object_detection_api_pipeline_config ssd_mobilenet_v2_coco_2018_03_29/pipeline.config --reverse_input_channels --tensorflow_use_custom_operations_config /opt/intel/openvino/deployment_tools/model_optimizer/extensions/front/tf/ssd_v2_support.json
+```
+The ssd_mobilenet_v2_coco_2018_03_29 model provided faster inference time but lacked in accuracy in terms of person identification with the video.
+
+ssdlite_mobilenet_v2_coco_2018_05_09 - http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz
+
+The IR is generated using the following command,
+```
+python /opt/intel/openvino/deployment_tools/model_optimizer/mo.py --input_model ssdlite_mobilenet_v2_coco_2018_05_09/frozen_inference_graph.pb --tensorflow_use_custom_operations_config  /opt/intel/openvino/deployment_tools/model_optimizer/extensions/front/tf/ssd_v2_support.json --reverse_input_channels --tensorflow_object_detection_api_pipeline_config ssdlite_mobilenet_v2_coco_2018_05_09/pipeline.config -o ssdlite_mobilenet_optimized
+```
+Similar to above model, the ssdlite_mobilenet_v2_coco_2018_05_09 model provided faster inference time but again lacked in accuracy.
+
 
 ## References
 - https://www.analyticsvidhya.com/blog/2020/04/build-your-own-object-detection-model-using-tensorflow-api/
