@@ -39,6 +39,10 @@ The Intermediate Engine core object is created along with the Intermediate Engin
 
 ## Comparing Model Performance
 
+The inference was run using the following command,
+```
+python main.py -i resources/Pedestrian_Detect_2_1_1.mp4 -m faster_rcnn_inception_optimized/frozen_inference_graph.xml -l /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so -d CPU -pt 0.4 | ffmpeg -v warning -f rawvideo -pixel_format bgr24 -video_size 768x432 -framerate 24 -i - http://0.0.0.0:3004/fac.ffm
+```
 After handling framework-agnostic Intermediate Representation (IR) format, the Inference Engine consumes the IR to perform inference.The initial model performance deals with the batching which impacts computational aspect during inference.The model inference was performed with single input.
 
 The size of the model pre- and post-conversion is mentioned here. For pre-conversion frozen_inference_graph.pb is considered and for post-conversion frozen_inference_graph.xml is considered. It is visible to note that the usage of OpenVino IR yields compressed size.
@@ -49,25 +53,20 @@ ssd_mobilenet_v2_coco | converted | 100 KB
 faster_rcnn_inception_v2_coco | original | 55MB
 faster_rcnn_inception_v2_coco | converted | 123KB
 
-During the inference test with ssd_mobilenet_v2_coco and faster_rcnn_inception_v2_coco the main problem arised with the detection of the second person in the video. The corresponding frame is between 227-449 based on the experiment conducted as mentioned in original_detection_model_inference.ipynb. The accuracy calculation was performed only taking into consideration the 2nd person. This gives us the overview about the accuracy improvement with OpenVino toolkit.
+During the inference test with ssd_mobilenet_v2_coco and faster_rcnn_inception_v2_coco the main problem arised with the detection of the second person in the video. The corresponding frame is between 227-449 based on the experiment conducted as mentioned in original_detection_model_inference.ipynb. The accuracy calculation was performed only taking into consideration the 2nd person. This gives us the overview about the accuracy improvement with OpenVino toolkit.The inference with original model was performed using the original_detection_model_inference.ipynb.
 
 Model | Type | Accuracy (2nd Person detection) | Total Inference Time (ms) | Test Environment
 ------------ | ------------- | ------------- | ------------- | -------------
 ssd_mobilenet_v2_coco | original | True positive = 35 / 222 = 0.1576 <br> False negative = 188 / 222 = 0.8468 |107585.649 | local development environment Intel i7 / 16GB
-ssd_mobilenet_v2_coco | converted | True positive = 198 / 222 = 0.8919 <br> False Negative = 24 / 222 = 0.1081 |100134.695 | udacity workspace
+ssd_mobilenet_v2_coco | converted | True positive = 127 / 222 = 0.5720 <br> False Negative = 95 / 222 = 0.4279 |100134.695 | udacity workspace
 faster_rcnn_inception_v2_coco | original | True positive = 198 / 222 = 0.8919 <br> False Negative = 24 / 222 = 0.1081 |804680.068 | local development environment Intel i7 / 16GB
 faster_rcnn_inception_v2_coco | converted | True positive = 213 / 222 = 0.9594 <br> False Negative = 9 / 222 = 0.0405 | 1276130.464 | udacity workspace
-
 
 The inference time of the model pre- and post-conversion clearly shows that faster_rcnn_inception_v2_coco requires additional inference time due to it's large number of model parameter which yields better accuracy.
 
 ## Assess Model Use Cases
 
-Some of the potential use cases of the people counter app are...
-
-Each of these use cases would be useful because...
+The people counter app can play an important role in smart city based applications. For example, particular area within a city where people density is analyzed over period of time or how public transporation is utilized by the people and where additional transportation is required. It will help definitely with better city planning.
 
 ## Assess Effects on End User Needs
-
-Lighting, model accuracy, and camera focal length/image size have different effects on a
-deployed edge model. The potential effects of each of these are as follows...
+The model accuracy is largely determined by the image feature set used during the training phase.How varied the training images in terms different condition, image anglewas used for training impacts the inference results.Also, the model architecture plays a important role in learning the specifics during the training.
