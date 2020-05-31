@@ -164,6 +164,7 @@ def infer_on_stream(args, client):
         inf_start = time.time()
         duration_report = None
         # perform inference
+        #print(frameCount)
         infer_network.exec_net(request_id, network_input)
         # Wait for the result 
         if infer_network.wait(request_id) == 0:
@@ -180,7 +181,8 @@ def infer_on_stream(args, client):
             
             
             if currentCount > lastCount:
-                startTime = time.time()
+                # get the frame when the person gets detected
+                startFrame = frameCount
                 totalCount = totalCount + currentCount - lastCount
                 publish_topic(client, PERSON_TOPIC, {"total": totalCount})
                 
@@ -190,7 +192,7 @@ def infer_on_stream(args, client):
                 missedCount = missedCount + 1
                 # wait till the certain count
                 if missedCount >= 5:
-                    duration = int(time.time() - startTime)
+                    duration =  int(((frameCount-startFrame) / cap.get(cv2.CAP_PROP_FPS)) * 1000)
                     # Publish messages to the MQTT server
                     publish_topic(client, DURATION_TOPIC, {"duration": duration})
                     missedCount = 0
@@ -278,6 +280,7 @@ def main():
     client = connect_mqtt()
     # Perform inference on the input stream
     infer_on_stream(args, client)
+    #infer_on_stream(args)
 
 
 if __name__ == '__main__':
