@@ -71,7 +71,7 @@ Edge AI provides the ability to perform inference closer to the source where dat
 The people counter app can help to count people movement within confined shop.In specific terms, current situation requires signal/notification when the threshold is reached or if additional people can enter the shop or should wait outside for their turn.This will certainly reduce manual inspection.
 
 ## Assess Effects on End User Needs
-The current chosen model yields a better accuracy for the provided video.The model performance can be further analyzed by feeding in videos with different features.The videos lighting in terms of brightness, the camera focal length aspect with blurred images and also the image size providing lower resolution can provide different insight with the model accuracy.Therefore, model selection for the particular usecase is dependent on end user requirement.
+The current chosen model yields a better accuracy for the provided video.The model performance can be further analyzed by feeding in videos with different features.The videos lighting in terms of brightness, the camera focal length aspect can yield blurred images and also the image size providing lower resolution can provide different insight with the model accuracy.For example, the model accuracy for lighting variation will be reasonable unless model is trained with only low contrast image.Therefore, model selection for the particular usecase is dependent on end user requirement.
 
 ## Documenting Model Research
 ssd_mobilenet_v2_coco_2018_03_29 - http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz
