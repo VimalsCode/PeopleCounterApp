@@ -64,7 +64,7 @@ faster_rcnn_inception_v2_coco | converted | True positive = 213 / 222 = 0.9594 <
 
 The inference time of the model pre- and post-conversion clearly shows that faster_rcnn_inception_v2_coco requires additional inference time due to it's large number of model parameter which yields better accuracy.
 
-Edge AI provides the ability to perform inference closer to the source where data gets generated and also helps to address data privacy as the processing happens at the edge.This is an efficient alternative for small to mid sized companies to better manage bandwidth usage and faster response times for their applications.This also reduces cloud requirement and thereby brings down data storage requirement.
+Edge AI provides the ability to perform inference closer to the source where data gets generated and also helps to address data privacy as the processing happens at the edge.This is an efficient alternative for small to mid sized companies to better manage bandwidth usage and faster response times for their applications.This also reduces cloud requirement and thereby bringing down data storage requirement.
 
 ## Assess Model Use Cases
 
@@ -92,6 +92,7 @@ Similar to above model, the ssdlite_mobilenet_v2_coco_2018_05_09 model provided 
 
 
 ## References
+- https://answers.opencv.org/question/80580/how-to-record-the-time-of-stay-by-detected-people-in-a-video/
 - https://www.analyticsvidhya.com/blog/2020/04/build-your-own-object-detection-model-using-tensorflow-api/
 - https://gist.github.com/imamdigmi/b203d120953db4ef2a89ca7ce70da0a1
 - https://medium.com/@iKhushPatel/convert-video-to-images-images-to-video-using-opencv-python-db27a128a481
